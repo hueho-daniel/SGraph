@@ -1,3 +1,7 @@
+# Begone target #
+target/*
+
+# Class files #
 *.class
 
 # Package Files #
