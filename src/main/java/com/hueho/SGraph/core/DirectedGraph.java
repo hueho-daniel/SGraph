@@ -35,11 +35,6 @@ public class DirectedGraph<V extends Vertex, E extends Edge<V>> extends
 	}
 
 	@Override
-	public Integer outDegree(V vertex) {
-		return this.adjacencyList.get(vertex).size();
-	}
-
-	@Override
 	public DirectedGraph<V, E> shallowCopy() {
 		DirectedGraph<V, E> copy = new DirectedGraph<>();
 		this.auxShallowCopy(copy);

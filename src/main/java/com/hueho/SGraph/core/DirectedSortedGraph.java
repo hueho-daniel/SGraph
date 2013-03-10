@@ -36,11 +36,6 @@ public class DirectedSortedGraph<V extends ComparableVertex, E extends Comparabl
 	}
 
 	@Override
-	public Integer outDegree(V vertex) {
-		return this.adjacencyList.get(vertex).size();
-	}
-
-	@Override
 	public DirectedSortedGraph<V, E> shallowCopy() {
 		DirectedSortedGraph<V, E> copy = new DirectedSortedGraph<>();
 		this.auxShallowCopy(copy);

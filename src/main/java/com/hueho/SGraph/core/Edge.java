@@ -1,9 +1,19 @@
 package com.hueho.SGraph.core;
 
 /**
- * @author Hueho
+ * A base abstract class representing a single edge in a graph. To use the
+ * unsorted graph implementations, you need to create a class extending Edge,
+ * representing a relationship between your Vertex objects. You also can't use
+ * the default constructor for it. Because of how the graphs are implemented,
+ * you usually doesn't need to do anything else.<br>
+ * Once you create the edge, you can't change any of it endpoints. <br>
+ * <br>
+ * DO NOT OVERRIDE HASHCODE AND EQUALS IN YOUR EXTENDED CLASS.<br>
+ * TODO: make it less sucky so people can override hashCode and equals if they
+ * are using this class
  * 
- * @param <V>
+ * @author Daniel Gracia
+ * 
  */
 public abstract class Edge<V extends Vertex> {
 
@@ -12,43 +22,37 @@ public abstract class Edge<V extends Vertex> {
 
 	private Integer edgeIndex;
 
+	protected Edge(V source, V target) {
+		this.source = source;
+		this.target = target;
+	}
+
 	/**
-	 * @return
+	 * @return the internal edge index. You shouldn't need to use this.
 	 */
 	public Integer getEdgeIndex() {
 		return this.edgeIndex;
 	}
 
+	/**
+	 * Sets the internal edge index. Only for internal use.
+	 */
 	protected final void setEdgeIndex(Integer edgeIndex) {
 		this.edgeIndex = edgeIndex;
 	}
 
 	/**
-	 * @return
+	 * @return the source of this edge
 	 */
 	public final V getSource() {
 		return this.source;
 	}
 
 	/**
-	 * @return
+	 * @return the target of this edge
 	 */
 	public final V getTarget() {
 		return this.target;
-	}
-
-	/**
-	 * @param source
-	 */
-	public final void setSource(final V source) {
-		this.source = source;
-	}
-
-	/**
-	 * @param target
-	 */
-	public final void setTarget(V target) {
-		this.target = target;
 	}
 
 	@SuppressWarnings("unchecked")

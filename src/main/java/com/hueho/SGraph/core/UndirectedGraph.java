@@ -53,12 +53,7 @@ public class UndirectedGraph<V extends Vertex, E extends Edge<V>> extends
 
 	@Override
 	public Integer inDegree(V vertex) {
-		return this.degree(vertex);
-	}
-
-	@Override
-	public Integer outDegree(V vertex) {
-		return this.degree(vertex);
+		return this.outDegree(vertex);
 	}
 
 	/**
@@ -66,7 +61,7 @@ public class UndirectedGraph<V extends Vertex, E extends Edge<V>> extends
 	 * @return the degree of the vertex in the graph
 	 */
 	public Integer degree(V vertex) {
-		return this.adjacencyList.get(vertex).size();
+		return this.outDegree(vertex);
 	}
 
 	@Override

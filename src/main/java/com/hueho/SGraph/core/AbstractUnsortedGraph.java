@@ -1,13 +1,15 @@
 package com.hueho.SGraph.core;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.LinkedHashMultimap;
 
 /**
  * Abstract class with basic constructs for a graph with unsorted data
- * structures. <br>
+ * structures. Uses {@link LinkedHashMap} and {@link LinkedHashSet} internally.
+ * Should be not dog-slow for most uses.<br>
  * 
  * @author Daniel Gracia
  * 
@@ -24,7 +26,7 @@ public abstract class AbstractUnsortedGraph<V extends Vertex, E extends Edge<V>>
 	 */
 	public AbstractUnsortedGraph() {
 		super(null, new LinkedHashSet<V>(), new LinkedHashSet<E>());
-		this.adjacencyList = HashMultimap.create();
+		this.adjacencyList = LinkedHashMultimap.create();
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package com.hueho.SGraph.core;
 
 import java.util.Collection;
-import java.util.Set;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.Multimap;
 
 /**
@@ -20,14 +20,14 @@ import com.google.common.collect.Multimap;
 public abstract class AbstractGraph<V extends Vertex, E extends Edge<V>> {
 
 	protected Multimap<V, E> adjacencyList;
-	protected Set<V> vertices;
-	protected Set<E> edges;
+	protected Collection<V> vertices;
+	protected Collection<E> edges;
 	protected Integer countVerticesIndex;
 	protected Integer countEdgesIndex;
 	protected E lastRemoved;
 
-	protected AbstractGraph(Multimap<V, E> adjacencyList, Set<V> vertices,
-			Set<E> edges) {
+	protected AbstractGraph(Multimap<V, E> adjacencyList,
+			Collection<V> vertices, Collection<E> edges) {
 		this.countVerticesIndex = 0;
 		this.countEdgesIndex = 0;
 		this.adjacencyList = adjacencyList;
@@ -105,16 +105,18 @@ public abstract class AbstractGraph<V extends Vertex, E extends Edge<V>> {
 
 	/**
 	 * @param vertex
-	 * @return a {@link Collection} of adjacent edges to the vertex parameter
+	 * @return a {@link ImmutableCollection} of adjacent edges to the vertex
+	 *         parameter
 	 */
-	public abstract Collection<E> getAdjacentEdges(V vertex);
+	public abstract ImmutableCollection<E> getAdjacentEdges(V vertex);
 
 	/**
 	 * 
 	 * @param vertex
-	 * @return a {@link Collection} of adjacent vertices to the vertex parameter
+	 * @return a {@link ImmutableCollection} of adjacent vertices to the vertex
+	 *         parameter
 	 */
-	public abstract Collection<V> getAdjacentVertices(V vertex);
+	public abstract ImmutableCollection<V> getAdjacentVertices(V vertex);
 
 	/**
 	 * 
@@ -128,17 +130,21 @@ public abstract class AbstractGraph<V extends Vertex, E extends Edge<V>> {
 	 * @param vertex
 	 * @return the out-degree of the vertex
 	 */
-	public abstract Integer outDegree(V vertex);
+	public Integer outDegree(V vertex) {
+		return this.adjacencyList.get(vertex).size();
+	}
 
 	/**
-	 * @return a {@link Set} containing all the vertices of the graph
+	 * @return a {@link ImmutableCollection} containing all the vertices of the
+	 *         graph
 	 */
-	public abstract Set<V> getVertices();
+	public abstract ImmutableCollection<V> getVertices();
 
 	/**
-	 * @return a {@link Set} containing all the edges of the graph
+	 * @return a {@link ImmutableCollection} containing all the edges of the
+	 *         graph
 	 */
-	public abstract Set<E> getEdges();
+	public abstract ImmutableCollection<E> getEdges();
 
 	/**
 	 * Return a <b>structure copy</b> of this graph. <br>
