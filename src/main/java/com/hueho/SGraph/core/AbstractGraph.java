@@ -1,0 +1,181 @@
+package com.hueho.SGraph.core;
+
+import java.util.Collection;
+import java.util.Set;
+
+import com.google.common.collect.Multimap;
+
+/**
+ * Abstract class with basic constructs for a graph implementation. <br>
+ * Uses a adjacency list, plus individual collections for vertices and edges to
+ * model the graph.
+ * 
+ * @author Daniel Gracia
+ * 
+ * @param <V>
+ *            A class which extends {@link Vertex}
+ * @param <E>
+ *            A class which extends {@link Edge}
+ */
+public abstract class AbstractGraph<V extends Vertex, E extends Edge<V>> {
+
+	protected Multimap<V, E> adjacencyList;
+	protected Set<V> vertices;
+	protected Set<E> edges;
+	protected Integer countVerticesIndex;
+	protected Integer countEdgesIndex;
+	protected E lastRemoved;
+
+	protected AbstractGraph(Multimap<V, E> adjacencyList, Set<V> vertices,
+			Set<E> edges) {
+		this.countVerticesIndex = 0;
+		this.countEdgesIndex = 0;
+		this.adjacencyList = adjacencyList;
+		this.vertices = vertices;
+		this.edges = edges;
+	}
+
+	/**
+	 * Add a single Vertex object to the graph, if it is not in the graph
+	 * already.
+	 * 
+	 * @return {@code true} if successful, {@code false} otherwise
+	 */
+	public boolean addVertex(V vertex) {
+		vertex.setVerticeIndex(this.countVerticesIndex);
+		this.countVerticesIndex++;
+		return this.vertices.add(vertex);
+	}
+
+	/**
+	 * Add a single Edge object to the graph, if it is not in the graph already.
+	 * 
+	 * @return {@code true} if successful, {@code false} otherwise
+	 */
+	public boolean addEdge(E edge) {
+		edge.setEdgeIndex(this.countEdgesIndex);
+		this.countEdgesIndex++;
+		return this.edges.add(edge)
+				&& this.adjacencyList.put(edge.getSource(), edge);
+	}
+
+	/**
+	 * Removes a Vertex object to the graph, if it is still in the graph. <br>
+	 * This method will also remove any dependent edge from the graph.
+	 * 
+	 * @return {@code true} if successful, {@code false} otherwise
+	 */
+	public boolean removeVertex(V vertex) {
+		for (E e : this.adjacencyList.get(vertex)) {
+			this.edges.remove(e);
+		}
+		return this.vertices.remove(vertex);
+	}
+
+	/**
+	 * Removes a single Edge object to the graph, if it is still in the graph. <br>
+	 * 
+	 * @return {@code true} if successful, {@code false} otherwise
+	 */
+	public boolean removeEdge(E edge) {
+		this.adjacencyList.remove(edge.getSource(), edge);
+		if (this.edges.remove(edge)) {
+			this.lastRemoved = edge;
+			return true;
+		} else
+			return false;
+	}
+
+	/**
+	 * Undo the last edge removal done by the {@link removeEdge()} method
+	 * 
+	 * @return the restored edge
+	 */
+	public E undoRemoveEdge() { // TODO should throw exception
+		if (this.lastRemoved != null) {
+			this.edges.add(this.lastRemoved);
+			this.adjacencyList.put(this.lastRemoved.getSource(),
+					this.lastRemoved);
+			E result = this.lastRemoved;
+			this.lastRemoved = null;
+			return result;
+		}
+		return null;
+	}
+
+	/**
+	 * @param vertex
+	 * @return a {@link Collection} of adjacent edges to the vertex parameter
+	 */
+	public abstract Collection<E> getAdjacentEdges(V vertex);
+
+	/**
+	 * 
+	 * @param vertex
+	 * @return a {@link Collection} of adjacent vertices to the vertex parameter
+	 */
+	public abstract Collection<V> getAdjacentVertices(V vertex);
+
+	/**
+	 * 
+	 * @param vertex
+	 * @return the in-degree of the vertex
+	 */
+	public abstract Integer inDegree(V vertex);
+
+	/**
+	 * 
+	 * @param vertex
+	 * @return the out-degree of the vertex
+	 */
+	public abstract Integer outDegree(V vertex);
+
+	/**
+	 * @return a {@link Set} containing all the vertices of the graph
+	 */
+	public abstract Set<V> getVertices();
+
+	/**
+	 * @return a {@link Set} containing all the edges of the graph
+	 */
+	public abstract Set<E> getEdges();
+
+	/**
+	 * Return a <b>structure copy</b> of this graph. <br>
+	 * Removing or adding vertices and edges won't alter the original graph,
+	 * however, modifying any internal parameter inside the vertices and edges
+	 * objects will write-through to the original graph
+	 * 
+	 */
+	public abstract AbstractGraph<V, E> shallowCopy();
+
+	/**
+	 * Helper function which can be used for {@code shallowCopy()}
+	 * implementations
+	 * 
+	 * @param copy
+	 *            a graph which will receive the values from this object
+	 */
+	protected void auxShallowCopy(AbstractGraph<V, E> copy) {
+		copy.vertices.addAll(this.vertices);
+		copy.edges.addAll(this.edges);
+		copy.adjacencyList.putAll(this.adjacencyList);
+		copy.countEdgesIndex = this.countEdgesIndex;
+		copy.countVerticesIndex = this.countVerticesIndex;
+	}
+
+	/**
+	 * @return the number of vertices in the graph
+	 */
+	public Integer getNumVertices() {
+		return this.vertices.size();
+	}
+
+	/**
+	 * @return the number of edges in the graph
+	 */
+	public Integer getNumEdges() {
+		return this.edges.size();
+	}
+
+}
